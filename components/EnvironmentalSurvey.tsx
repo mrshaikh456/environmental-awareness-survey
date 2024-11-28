@@ -139,13 +139,15 @@ export default function EnvironmentalSurvey() {
         <CardTitle className="text-3xl font-bold">Environmental Awareness Survey</CardTitle>
         <CardDescription className="text-lg">Help us understand environmental awareness in your community</CardDescription>
       </CardHeader>
-      <Alert className="m-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Note</AlertTitle>
-        <AlertDescription>
-          Your responses will be stored on our server. Please do not include any personal information.
-        </AlertDescription>
-      </Alert>
+      <CardContent className="p-6 space-y-4">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Note</AlertTitle>
+          <AlertDescription>
+            Your responses will be stored on our server. Please do not include any personal information.
+          </AlertDescription>
+        </Alert>
+      </CardContent>
       <form onSubmit={handleSubmit}>
         <CardContent className="p-6">
           <motion.div
