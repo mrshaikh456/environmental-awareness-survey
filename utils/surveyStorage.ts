@@ -1,7 +1,7 @@
 import { createPool, sql } from '@vercel/postgres';
 
 const pool = createPool({
-  connectionString: process.env.POSTGRES_URL
+  connectionString: process.env.POSTGRES_URL || process.env.NEXT_PUBLIC_POSTGRES_URL
 });
 
 export async function saveResponses(responses: Record<number, string>) {
