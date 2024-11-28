@@ -1,19 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { saveResponses, hasSubmitted } from '../utils/surveyStorage';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { saveResponses, hasSubmitted } from "../utils/surveyStorage";
 import { motion } from "framer-motion";
-import { AlertCircle } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const questions = [
   "Are you aware of the concept of climate change?",
   "Do you know what greenhouse gases are?",
-  "Have you heard of the term \"carbon footprint\"?",
+  'Have you heard of the term "carbon footprint"?',
   "Do you believe human activities significantly impact the environment?",
   "Are you familiar with the concept of sustainable living?",
   "Do you avoid using single-use plastic items?",
@@ -35,7 +42,7 @@ const questions = [
   "Have you ever attended a workshop or seminar on environmental topics?",
   "Do you support businesses that follow sustainable practices?",
   "Do you follow government or local regulations for waste segregation and disposal?",
-  "Are you aware of global initiatives like the Paris Agreement or COP conferences?"
+  "Are you aware of global initiatives like the Paris Agreement or COP conferences?",
 ];
 
 export default function EnvironmentalSurvey() {
@@ -69,7 +76,9 @@ export default function EnvironmentalSurvey() {
         setCurrentQuestion(currentQuestion + 1);
       }
     } else {
-      alert("Please answer the current question before moving to the next one.");
+      alert(
+        "Please answer the current question before moving to the next one."
+      );
     }
   };
 
@@ -86,7 +95,10 @@ export default function EnvironmentalSurvey() {
           <CardTitle className="text-3xl font-bold">Thank You!</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <p className="text-lg">You have already submitted the survey. Thank you for your participation!</p>
+          <p className="text-lg">
+            You have already submitted the survey. Thank you for your
+            participation!
+          </p>
         </CardContent>
       </Card>
     );
@@ -99,7 +111,10 @@ export default function EnvironmentalSurvey() {
           <CardTitle className="text-3xl font-bold">Thank You!</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <p className="text-lg">Your responses have been recorded. Thank you for participating in our environmental awareness survey!</p>
+          <p className="text-lg">
+            Your responses have been recorded. Thank you for participating in
+            our environmental awareness survey!
+          </p>
         </CardContent>
       </Card>
     );
@@ -108,16 +123,22 @@ export default function EnvironmentalSurvey() {
   return (
     <Card className="w-full max-w-3xl mx-auto shadow-2xl">
       <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
-        <CardTitle className="text-3xl font-bold">Environmental Awareness Survey</CardTitle>
-        <CardDescription className="text-lg">Help us understand environmental awareness in your community</CardDescription>
+        <CardTitle className="text-3xl font-bold">
+          Environmental Awareness Survey
+        </CardTitle>
+        <CardDescription className="text-lg">
+          Help us understand environmental awareness in your community
+        </CardDescription>
       </CardHeader>
-      <Alert variant="default" className="m-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Warning</AlertTitle>
-        <AlertDescription>
-          Your responses will be stored on our server. Please do not include any personal information.
-        </AlertDescription>
-      </Alert>
+      <CardContent className="p-6 space-y-4">
+        <Alert variant="default">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle className="font-semibold">Note</AlertTitle>
+          <AlertDescription>
+            Your responses will be stored on our server.
+          </AlertDescription>
+        </Alert>
+      </CardContent>
       <form onSubmit={handleSubmit}>
         <CardContent className="p-6">
           <motion.div
@@ -128,13 +149,17 @@ export default function EnvironmentalSurvey() {
             transition={{ duration: 0.3 }}
             className="space-y-4"
           >
-            <h2 className="text-2xl font-semibold mb-4">Question {currentQuestion + 1} of {questions.length}</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Question {currentQuestion + 1} of {questions.length}
+            </h2>
             <Label htmlFor={`question-${currentQuestion}`} className="text-lg">
               {questions[currentQuestion]}
             </Label>
             <RadioGroup
               id={`question-${currentQuestion}`}
-              onValueChange={(value) => setResponses(prev => ({ ...prev, [currentQuestion]: value }))}
+              onValueChange={(value) =>
+                setResponses((prev) => ({ ...prev, [currentQuestion]: value }))
+              }
               className="flex space-x-4"
               value={responses[currentQuestion]}
             >
@@ -150,17 +175,29 @@ export default function EnvironmentalSurvey() {
           </motion.div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="button" onClick={handlePrevious} disabled={currentQuestion === 0} variant="outline">
+          <Button
+            type="button"
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            variant="outline"
+          >
             Previous
           </Button>
           {currentQuestion === questions.length - 1 ? (
-            <Button type="submit" className="bg-green-500 hover:bg-green-600">Submit Survey</Button>
+            <Button type="submit" className="bg-green-500 hover:bg-green-600">
+              Submit Survey
+            </Button>
           ) : (
-            <Button type="button" onClick={handleNext} className="bg-blue-500 hover:bg-blue-600">Next</Button>
+            <Button
+              type="button"
+              onClick={handleNext}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Next
+            </Button>
           )}
         </CardFooter>
       </form>
     </Card>
   );
 }
-
