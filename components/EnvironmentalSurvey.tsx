@@ -43,15 +43,18 @@ export default function EnvironmentalSurvey() {
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
   useEffect(() => {
-    const checkSubmission = hasSubmitted();
-    setAlreadySubmitted(checkSubmission);
-    setSubmitted(checkSubmission);
+    const checkSubmission = async () => {
+      const checkSubmitted = await hasSubmitted();
+      setAlreadySubmitted(checkSubmitted);
+      setSubmitted(checkSubmitted);
+    };
+    checkSubmission();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (Object.keys(responses).length === questions.length) {
-      saveResponses(responses);
+      await saveResponses(responses);
       setSubmitted(true);
     } else {
       alert("Please answer all questions before submitting.");
@@ -59,8 +62,12 @@ export default function EnvironmentalSurvey() {
   };
 
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+    if (responses[currentQuestion]) {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+      }
+    } else {
+      alert("Please answer the current question before moving to the next one.");
     }
   };
 

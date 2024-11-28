@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList } from "recharts"
 import { getAllResponses } from '../utils/surveyStorage';
 import { motion } from "framer-motion";
+import { Loader2 } from 'lucide-react'
 
 const questions = [
   "Are you aware of the concept of climate change?",
@@ -36,32 +37,50 @@ const questions = [
 
 export default function ResultsChart() {
   const [results, setResults] = useState<{ question: string; yesPercentage: number; noPercentage: number }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const updateResults = () => {
-      const allResponses = getAllResponses();
-      const totalResponses = allResponses.length;
+    const eventSource = new EventSource('/api/survey-updates');
 
+    eventSource.onmessage = (event) => {
+      const allResponses: string[][] = JSON.parse(event.data); // Assuming `allResponses` is an array of arrays of strings
+      const totalResponses = allResponses.length;
+    
       const calculatedResults = questions.map((question, index) => {
-        const yesCount = allResponses.filter(response => response[index] === 'yes').length;
+        const yesCount = allResponses.filter((response: string[]) => response[index] === 'yes').length;
         const yesPercentage = totalResponses > 0 ? (yesCount / totalResponses) * 100 : 0;
         const noPercentage = totalResponses > 0 ? 100 - yesPercentage : 0;
-
+    
         return {
           question,
           yesPercentage: parseFloat(yesPercentage.toFixed(2)),
           noPercentage: parseFloat(noPercentage.toFixed(2))
         };
       });
-
+    
       setResults(calculatedResults);
+      setIsLoading(false);
     };
 
-    updateResults();
-    const intervalId = setInterval(updateResults, 5000); // Update every 5 seconds
+    eventSource.onerror = () => {
+      console.error('EventSource failed');
+      setIsLoading(false);
+    };
 
-    return () => clearInterval(intervalId);
+    return () => {
+      eventSource.close();
+    };
   }, []);
+
+  if (isLoading) {
+    return (
+      <Card className="w-full max-w-6xl mx-auto shadow-2xl">
+        <CardContent className="p-6 flex justify-center items-center h-96">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-6xl mx-auto shadow-2xl">

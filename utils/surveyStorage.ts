@@ -1,17 +1,42 @@
-const STORAGE_KEY = 'environmental_survey_responses';
-
-export function saveResponses(responses: Record<number, string>) {
-  const existingResponses = getAllResponses();
-  existingResponses.push(responses);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(existingResponses));
+export async function saveResponses(responses: Record<number, string>) {
+  try {
+    const response = await fetch('/api/survey', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(responses),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to save responses');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error saving responses:', error);
+    throw error;
+  }
 }
 
-export function getAllResponses(): Record<number, string>[] {
-  const storedResponses = localStorage.getItem(STORAGE_KEY);
-  return storedResponses ? JSON.parse(storedResponses) : [];
+export async function getAllResponses(): Promise<Record<number, string>[]> {
+  try {
+    const response = await fetch('/api/survey');
+    if (!response.ok) {
+      throw new Error('Failed to fetch responses');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching responses:', error);
+    throw error;
+  }
 }
 
-export function hasSubmitted(): boolean {
-  return getAllResponses().length > 0;
+export async function hasSubmitted(): Promise<boolean> {
+  try {
+    const responses = await getAllResponses();
+    return responses.length > 0;
+  } catch (error) {
+    console.error('Error checking submission status:', error);
+    return false;
+  }
 }
 
