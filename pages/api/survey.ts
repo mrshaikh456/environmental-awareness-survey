@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await sql`SELECT * FROM responses`;
       res.status(200).json(result.rows);
     } catch (error) {
+      console.error('Error fetching responses:', error);
       res.status(500).json({ error: 'Failed to fetch responses' });
     }
   } else if (req.method === 'POST') {
@@ -17,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await sql`INSERT INTO responses (data) VALUES (${JSON.stringify(newResponse)})`;
       res.status(200).json({ message: 'Response saved successfully' });
     } catch (error) {
+      console.error('Error saving response:', error);
       res.status(500).json({ error: 'Failed to save response' });
     }
   } else {

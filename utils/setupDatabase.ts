@@ -12,6 +12,7 @@ export async function setupDatabase() {
     console.log('Database setup complete');
   } catch (error) {
     console.error('Error setting up database:', error);
+    throw error; // Rethrow the error so we can catch it in the calling function
   }
 }
 
