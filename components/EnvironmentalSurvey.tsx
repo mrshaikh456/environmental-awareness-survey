@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { saveResponses, hasSubmitted } from '../utils/surveyStorage';
 import { motion } from "framer-motion";
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 const questions = [
   "Are you aware of the concept of climate change?",

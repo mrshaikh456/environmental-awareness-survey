@@ -1,23 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getAllResponses } from '../../utils/surveyStorage'
+import { sql } from '@vercel/postgres';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive'
-  })
+  });
 
   const sendUpdate = async () => {
-    const responses = await getAllResponses()
-    res.write(`data: ${JSON.stringify(responses)}\n\n`)
-  }
+    try {
+      const result = await sql`SELECT * FROM responses`;
+      res.write(`data: ${JSON.stringify(result.rows)}\n\n`);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-  const intervalId = setInterval(sendUpdate, 1000)
+  const intervalId = setInterval(sendUpdate, 1000);
 
   req.on('close', () => {
-    clearInterval(intervalId)
-    res.end()
-  })
+    clearInterval(intervalId);
+    res.end();
+  });
 }
 

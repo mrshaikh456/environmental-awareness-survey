@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LabelList } from "recharts"
-import { getAllResponses } from '../utils/surveyStorage';
 import { motion } from "framer-motion";
 import { Loader2 } from 'lucide-react'
 
@@ -43,21 +42,21 @@ export default function ResultsChart() {
     const eventSource = new EventSource('/api/survey-updates');
 
     eventSource.onmessage = (event) => {
-      const allResponses: string[][] = JSON.parse(event.data); // Assuming `allResponses` is an array of arrays of strings
+      const allResponses = JSON.parse(event.data);
       const totalResponses = allResponses.length;
-    
+
       const calculatedResults = questions.map((question, index) => {
-        const yesCount = allResponses.filter((response: string[]) => response[index] === 'yes').length;
+        const yesCount = allResponses.filter((response: { data: Record<number, string> }) => response.data[index] === 'yes').length;
         const yesPercentage = totalResponses > 0 ? (yesCount / totalResponses) * 100 : 0;
         const noPercentage = totalResponses > 0 ? 100 - yesPercentage : 0;
-    
+
         return {
           question,
           yesPercentage: parseFloat(yesPercentage.toFixed(2)),
           noPercentage: parseFloat(noPercentage.toFixed(2))
         };
       });
-    
+
       setResults(calculatedResults);
       setIsLoading(false);
     };

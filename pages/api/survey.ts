@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { setupDatabase } from '../../utils/setupDatabase';
 
 const dataFilePath = path.join(process.cwd(), 'data', 'responses.json')
 
@@ -24,7 +25,8 @@ function saveResponses(responses: Response[]) {
   fs.writeFileSync(dataFilePath, JSON.stringify(responses))
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await setupDatabase();
   if (req.method === 'GET') {
     const responses = getResponses()
     res.status(200).json(responses)
